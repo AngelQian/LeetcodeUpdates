@@ -1,11 +1,14 @@
 public class Solution {
     public String convertToTitle(int n) {
-        StringBuilder sb = new StringBuilder();
+        //思路，每一次通过取模获得最低位的字母；
+        //同时需要注意的是：从字母A开始的话，已经算了一个1
+        StringBuilder builder = new StringBuilder();
         while(n>0){
             n--;
-            sb.append((char)('A'+n%26));
-            n /= 26;
+            int x=n%26;
+            builder.append((char)('A'+x));
+            n/=26;
         }
-        return sb.reverse().toString();
+        return builder.reverse().toString();
     }
 }
