@@ -1,0 +1,502 @@
+打印
+
+https://github.com/AngelQian/LeetcodeUpdates
+angelqian2@gmail.com
+lijuan.qian@sjsu.edu
+qian222@126.com
+***********************
+Invert Binary Tree Total Accepted: 28818 Total Submissions: 77425 My Submissions Question Solution 
+Invert a binary tree.
+
+     4
+   /   \
+  2     7
+ / \   / \
+1   3 6   9
+to
+     4
+   /   \
+  7     2
+ / \   / \
+9   6 3   1
+--------------1------------
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+public class Solution {
+    public TreeNode invertTree(TreeNode root) {
+        if(root==null)
+            return null;
+        
+        TreeNode node=root.left;
+        root.left=invertTree(root.right);
+        root.right=invertTree(node);
+        
+        return root;
+    }
+}
+-------------2-------------
+public class Solution {
+    public TreeNode invertTree(TreeNode root) {
+        if(root==null)
+            return null;
+        
+        Deque<TreeNode> stack = new LinkedList<>();
+        stack.push(root);
+        while(!stack.isEmpty()){
+            TreeNode rt=stack.pop();
+            TreeNode tmp=rt.left;
+            rt.left=rt.right;
+            rt.right=tmp;
+            
+            if(rt.left!=null)
+                stack.push(rt.left);
+            if(rt.right!=null)
+                stack.push(rt.right);
+        }
+        
+        return root;
+    }
+}
+=========================
+Summary Ranges Total Accepted: 15764 Total Submissions: 84325 My Submissions Question Solution 
+Given a sorted integer array without duplicates, return the summary of its ranges.
+
+For example, given [0,1,2,4,5,7], return ["0->2","4->5","7"].
+-----------------------
+public class Solution {
+    public List<String> summaryRanges(int[] nums) {
+        List<String> result = new ArrayList<>();
+        StringBuilder builder = new StringBuilder();
+        
+        if(nums.length<1)
+            return result;
+        
+        if(nums.length==1){ 
+            builder.append(nums[0]);
+            result.add(builder.toString());
+            return result;
+        }
+        
+        for(int i=0, j=i; i<nums.length; i=j+1){
+            
+            for(j=i; j+1<nums.length && nums[j+1]==nums[i]+j+1-i; j++);
+            
+            builder.append(nums[i]);
+            if(j!=i)
+                builder.append("->").append(nums[j]);
+            
+            result.add(builder.toString());
+            builder=new StringBuilder();
+        }
+        
+        
+        return result;
+    }
+}
+================================
+Different Ways to Add Parentheses Total Accepted: 4874 Total Submissions: 18640 My Submissions Question Solution 
+Given a string of numbers and operators, return all possible results from computing all the different possible ways to group numbers and operators. The valid operators are +, - and *.
+
+
+Example 1
+Input: "2-1-1".
+
+((2-1)-1) = 0
+(2-(1-1)) = 2
+Output: [0, 2]
+
+
+Example 2
+Input: "2*3-4*5"
+
+(2*(3-(4*5))) = -34
+((2*3)-(4*5)) = -14
+((2*(3-4))*5) = -10
+(2*((3-4)*5)) = -10
+(((2*3)-4)*5) = 10
+Output: [-34, -14, -10, -10, 10]
+-----------------------
+public class Solution {
+    public List<Integer> diffWaysToCompute(String input) {
+        List<Integer> result = new ArrayList<>();
+        
+        for(int i=0; i<input.length(); i++){
+            char op=input.charAt(i);
+            
+            //break two parts if meet operators, each part may have several results
+            if(op=='+'||op=='-'||op=='*'){
+                List<Integer> firstResult = diffWaysToCompute(input.substring(0,i));
+                List<Integer> secondResult = diffWaysToCompute(input.substring(i+1,input.length()));
+                for(Integer f: firstResult){
+                    for(Integer s: secondResult){
+                        switch(op){
+                            case '+':
+                                result.add(f+s);
+                                break;
+                            case '-':
+                                result.add(f-s);
+                                break;
+                            case '*':
+                                result.add(f*s);
+                                break;
+                        }
+                    }
+                }
+            }    
+        }
+        
+        //divide and meet one element at last
+        if(result.size()<1){
+            result.add(Integer.parseInt(input));
+        }
+        
+        return result;
+    }
+}
+================================
+Palindrome Linked List Total Accepted: 14329 Total Submissions: 66033 My Submissions Question Solution 
+Given a singly linked list, determine if it is a palindrome.
+
+Follow up:
+Could you do it in O(n) time and O(1) space?
+--------------------------------
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode(int x) { val = x; }
+ * }
+ */
+public class Solution {
+    public boolean isPalindrome(ListNode head) {
+        ListNode fast=head, slow=head;
+        ListNode prev = new ListNode(-1);
+        //find mid-point
+        //1->2->3    => 1->2(s)->3(f)
+        //1->2->3->4 => 1->2->3(s)->4->null(f)
+        while(fast!=null&&fast.next!=null){
+            fast=fast.next.next;
+            prev=slow;
+            slow=slow.next;
+        }
+        
+        //reverse the first part with head node
+        prev.next=null;
+        ListNode head1=reverseList(head);
+        ListNode head2= fast==null?slow:slow.next;
+        
+        
+        //compare the two parts
+        while(head1!=null&&head2!=null){
+            if(head1.val != head2.val)
+                return false;
+            head1=head1.next;
+            head2=head2.next;
+        }
+        
+        return true;
+    }
+    
+    private ListNode reverseList(ListNode node){
+        ListNode sudo = new ListNode(-1);
+        sudo.next=node;
+        
+        ListNode cur=node, next=new ListNode(-1);
+        while(cur!=null && cur.next!=null){
+            next=cur.next;
+            cur.next=next.next;
+            next.next=sudo.next;
+            sudo.next=next;
+        }
+        
+        return sudo.next;
+    }
+}
+=================================
+Kth Smallest Element in a BST Total Accepted: 12525 Total Submissions: 42005 My Submissions Question Solution 
+Given a binary search tree, write a function kthSmallest to find the kth smallest element in it.
+
+Note: 
+You may assume k is always valid, 1 ≤ k ≤ BST's total elements.
+
+Follow up:
+What if the BST is modified (insert/delete operations) often and you need to find the kth smallest frequently? How would you optimize the kthSmallest routine?
+---------------------------1--------------
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+public class Solution {
+    public int kthSmallest(TreeNode root, int k) {
+        
+        int leftNd=countNode(root.left);
+        int rightNd=countNode(root.right);
+        if(k==leftNd+1)
+            return root.val;
+        else if(k<leftNd+1)  
+            return kthSmallest(root.left, k);
+        else
+            return kthSmallest(root.right, k-leftNd-1);
+    }
+    
+    private int countNode(TreeNode root){
+        if(root==null)
+            return 0;
+        return 1+countNode(root.left)+countNode(root.right);
+    }
+}
+===========================
+Number of Digit One Total Accepted: 6924 Total Submissions: 34535 My Submissions Question Solution 
+Given an integer n, count the total number of digit 1 appearing in all non-negative integers less than or equal to n.
+
+For example:
+Given n = 13,
+Return 6, because digit 1 occurred in the following numbers: 1, 10, 11, 12, 13.
+------------
+以24071为例，如果我们想计算百位上1出现的次数，具体思路如下：
+
+获取百位的高位为24，获取百位的低位为71，当前百位数字为0。
+从高位出发来分析，百位出现的次数有：00100~00190,01100~01190,02100~02190,…,23100~23190。总共有(24*100)个1出现。
+这是百位为0的情况，如果百位为1的时候，那除了上述的(24*100)个1之外，还包括：24100～24171，共(71 + 1)个1，即总共：24 * 100 + 71 + 1。
+
+如果百位大于1例如为6的时候，那除了最开始的(24*100)个1之外，还包括了：24100~24199，共100个1，即总共：(24 + 1)*100。
+
+总结规律
+
+其实通过上面的分析，我们就可以归纳出一个规律如下。
+
+要求第i位1出现的次数，并且i的高位数为highN，低位数为lowN，当前第i位的数字为cdigit，则当前i位1出现的次数分三种情况：
+
+cdigit == 0, count = highN * factor.
+cdigit == 1, count = highN * factor + lowN + 1.
+cdigit > 1, count = (highN + 1) * factor.
+其中，factor为当前的乘积因子，例如百位的factor为100，十位的乘积因子为10。
+-----------------
+public class Solution {
+    public int countDigitOne(int n) {
+        long highDigit=0, lowDigit=0;
+        int count=0;
+        for(long factor=1; n/factor>0; factor*=10){
+            highDigit = n/(factor*10);
+            // lowDigit = (n%(factor*10))%factor;
+            
+            long cur = (n%(factor*10))/factor;
+            if(cur==0)
+                count+= highDigit*factor;
+            else if(cur==1)
+                count+= highDigit*factor+lowDigit+1;
+            else
+                count+= highDigit*factor+factor;
+                
+            lowDigit+= cur*factor;    
+        }
+        
+        return count;
+    }
+}
+=====================
+             insert             remove      query     validate
+Stack -     push  ,              pop ,      peek ,   isEmpty
+Queue -   offer(boolean) ,       poll ,     peek,    isEmpty
+Dequeue-  offerFirst(boolean), pollFirst, peekFirst, isEmpty
+		  offerLast(boolean),  pollLast,  peekLast,  isEmpty
+		  
+------------
+Implement Queue using Stacks Total Accepted: 12171 Total Submissions: 35900 My Submissions Question Solution 
+Implement the following operations of a queue using stacks.
+
+push(x) -- Push element x to the back of queue.
+pop() -- Removes the element from in front of queue.
+peek() -- Get the front element.
+empty() -- Return whether the queue is empty.
+Notes:
+You must use only standard operations of a stack -- which means only push to top, peek/pop from top, size, and is empty operations are valid.
+Depending on your language, stack may not be supported natively. You may simulate a stack by using a list or deque (double-ended queue), as long as you use only standard operations of a stack.
+You may assume that all operations are valid (for example, no pop or peek operations will be called on an empty queue).
+---------------------
+class MyQueue {
+    private Stack<Integer> stack_in = new Stack<>();
+    private Stack<Integer> stack_out = new Stack<>();
+    // Push element x to the back of queue.
+    public void push(int x) {
+        while(!stack_out.isEmpty()){
+            stack_in.push(stack_out.pop());
+        }
+        stack_in.push(x);
+    }
+
+    // Removes the element from in front of queue.
+    public void pop() {
+        rebuildToOut();
+        stack_out.pop();
+    }
+
+    // Get the front element.
+    public int peek() {
+        rebuildToOut();
+        return stack_out.peek();
+    }
+
+    // Return whether the queue is empty.
+    public boolean empty() {
+        return stack_in.isEmpty() && stack_out.isEmpty();
+    }
+    
+    private void rebuildToOut(){
+        while(!stack_in.isEmpty()){
+            stack_out.push(stack_in.pop());
+        }
+    }
+}
+====================
+Lowest Common Ancestor of a Binary Search Tree Total Accepted: 17854 Total Submissions: 47500 My Submissions Question Solution 
+Given a binary search tree (BST), find the lowest common ancestor (LCA) of two given nodes in the BST.
+
+According to the definition of LCA on Wikipedia: “The lowest common ancestor is defined between two nodes v and w as the lowest node in T that has both v and w as descendants (where we allow a node to be a descendant of itself).”
+
+        _______6______
+       /              \
+    ___2__          ___8__
+   /      \        /      \
+   0      _4       7       9
+         /  \
+         3   5
+For example, the lowest common ancestor (LCA) of nodes 2 and 8 is 6. Another example is LCA of nodes 2 and 4 is 2, since a node can be a descendant of itself according to the LCA definition.
+-------------1------------
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+public class Solution {
+    public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
+        while((root.val-p.val)*(root.val-q.val)>0)
+            root=p.val>root.val? root.right:root.left;
+        return root;    
+    }
+}
+---------2-------------
+public class Solution {
+    public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
+        if((root.val-p.val)*(root.val-q.val)<=0)
+            return root;
+            
+        return lowestCommonAncestor(root.val<p.val?root.right:root.left, p, q);     
+    }
+}
+=====================
+Lowest Common Ancestor of a Binary Tree 
+        _______3______
+       /              \
+    ___5__          ___1__
+   /      \        /      \
+   6      _2       0       8
+         /  \
+         7   4
+-------
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+public class Solution {
+    public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
+        if(root==null || root==p || root==q)
+            return root;
+        
+        TreeNode leftTn = lowestCommonAncestor(root.left, p, q);
+        TreeNode rightTn = lowestCommonAncestor(root.right, p, q);
+        if(leftTn!=null && rightTn!=null)
+            return root;
+        
+        return leftTn==null? rightTn:leftTn;
+    }
+}
+====================
+Search a 2D Matrix II Total Accepted: 9096 Total Submissions: 32633 My Submissions Question Solution 
+Write an efficient algorithm that searches for a value in an m x n matrix. This matrix has the following properties:
+
+Integers in each row are sorted in ascending from left to right.
+Integers in each column are sorted in ascending from top to bottom.
+For example,
+
+Consider the following matrix:
+
+[
+  [1,   4,  7, 11, 15],
+  [2,   5,  8, 12, 19],
+  [3,   6,  9, 16, 22],
+  [10, 13, 14, 17, 24],
+  [18, 21, 23, 26, 30]
+]
+-------------1------------
+public class Solution {
+    public boolean searchMatrix(int[][] matrix, int target) {
+        //矩阵分析法。与矩阵中心数字比较：
+        //如果大于该值则排除左上角
+        //如果小于该值则排除右下角
+        int row=matrix.length, col=matrix[0].length;
+        return searchInSubMatrix(matrix, 0, 0, row-1, col-1, target);
+    }
+    
+    private boolean searchInSubMatrix(int[][] matrix, int startX, int startY, int endX, int endY, int target){
+        if(startX>endX || startY>endY)
+            return false;
+            
+        int midX=(startX+endX)/2, midY=(startY+endY)/2;
+        int value = matrix[midX][midY];
+        if(target == value)
+            return true;
+        else if(target < value)   
+            return searchInSubMatrix(matrix, startX, startY, endX, midY-1, target)||
+            searchInSubMatrix(matrix, startX, midY, midX-1, endY, target);
+        else{
+            return searchInSubMatrix(matrix, startX, midY+1, midX, endY, target)||
+            searchInSubMatrix(matrix, midX+1, startY, endX, endY, target);
+        }    
+    }
+}
+----------------2-------------
+public class Solution {
+    public boolean searchMatrix(int[][] matrix, int target) {
+        //与右上角的值作比较
+        //如果大于它，则排除该行
+        //如果小于它，则排除该列
+        int row=matrix.length, col=matrix[0].length;
+        int x=0, y=col-1;
+        while(x<row && y>=0){
+            int value = matrix[x][y];
+            if(target==value)
+                return true;
+            else if(target>value)
+                x++;
+            else
+                y--;
+        }
+        return false;
+    }
+}
+================================
+		 
+

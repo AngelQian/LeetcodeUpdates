@@ -1,0 +1,15 @@
+performance depends on different algrithoms/machines
+How much time it takes as increasing the input size?
+do worst case analysis to analyze algorithms
+Θ Notation: The theta notation bounds a functions from above and below, so it defines exact asymptotic behavior.
+Big O Notation: The Big O notation defines an upper bound of an algorithm, it bounds a function only from above.
+O(1): Time complexity of a function (or set of statements) is considered as O(1) if it doesn’t contain loop, recursion and call to any other non-constant time function.
+A loop or recursion that runs a constant number of times is also considered as O(1).
+O(n): Time Complexity of a loop is considered as O(n) if the loop variables is incremented / decremented by a constant amount. 
+O(n^c): Time complexity of nested loops is equal to the number of times the innermost statement is executed. 
+O(Logn) Time Complexity of a loop is considered as O(Logn) if the loop variables is divided / multiplied by a constant amount.
+O(LogLogn) Time Complexity of a loop is considered as O(LogLogn) if the loop variables is reduced / increased exponentially by a constant amount.
+we calculate time complexity as sum of time complexities of individual loops.
+We evaluate the situation when values in if-else conditions cause maximum number of statements to be executed.
+
+  
