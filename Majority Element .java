@@ -1,18 +1,39 @@
-public class Solution {
-    public int majorityElement(int[] num) {
-        HashMap<Integer, Integer> hm = new HashMap<>();
-		int result_count = 0, result = 0;
-		for(int i=0; i<num.length; i++){
-			if(!hm.containsKey(num[i]))
-				hm.put(num[i], 1);
-			else
-				hm.put(num[i], hm.get(num[i])+1);
-			
-			if(result_count < hm.get(num[i])){
-				result_count = hm.get(num[i]);
-				result = num[i];
-			}
-		}
-		return result;
+    /**
+     * 算法基础：摩尔投票法
+     * @param nums
+     * @return
+     */
+    public int majorityElement(int[] nums) {
+
+        int majority = -1;
+
+        int count = 0;
+
+        for (int num : nums) {
+            if (count == 0) {
+                majority = num;
+                count++;
+            } else {
+                if (majority == num) {
+                    count++;
+                } else {
+                    count--;
+                }
+            }
+        }
+
+        int counter = 0;
+        if (count <= 0) {
+            return -1;
+        } else {
+            for (int num : nums) {
+                if (num == majority) counter ++;
+            }
+        }
+
+        if (counter > nums.length / 2) {
+            return majority;
+        }
+
+        return -1;
     }
-}
