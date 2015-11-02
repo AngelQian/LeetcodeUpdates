@@ -1,0 +1,33 @@
+public class Solution {
+    public int numIslands(char[][] grid) {
+        int row=grid.length-1;
+        if(row<0)
+            return 0;
+            
+        int col=grid[0].length-1;
+        int count =0;
+        
+        for(int i=0; i<=row; i++){
+            for(int j=0; j<=col; j++){
+                if(grid[i][j]=='1'){
+                    count ++;
+                    numIslandsHelper(grid, i, j, row, col);
+                }
+            }
+        }
+        return count;
+    }
+    
+    private void numIslandsHelper(char[][] grid, int x, int y, int rowIndex, int colIndex){
+        if(x>rowIndex ||y>colIndex || x<0 || y<0)
+            return;
+        if(grid[x][y]=='0')
+            return;
+            
+        grid[x][y] = '0';
+        numIslandsHelper(grid, x+1, y, rowIndex, colIndex);
+        numIslandsHelper(grid, x-1, y, rowIndex, colIndex);
+        numIslandsHelper(grid, x, y+1, rowIndex, colIndex);
+        numIslandsHelper(grid, x, y-1, rowIndex, colIndex);
+    }
+}
