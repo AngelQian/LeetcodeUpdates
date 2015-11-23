@@ -48,3 +48,4 @@ public class Solution {
         return val*width;
     }
 }
+//https://leetcode.com/discuss/52670/solution-based-maximum-rectangle-histogram-with-explanation
