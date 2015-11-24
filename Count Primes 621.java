@@ -1,15 +1,14 @@
 public class Solution {
     public int countPrimes(int n) {
-        int v=0;
-        boolean[] helper = new boolean[n];
+        boolean[] notPrimes = new boolean[n];
+        int count=0;
         for(int i=2; i<n; i++){
-            if(helper[i] == false){
-                v++;
-                for(int j=i*2; j<n; j+=i)
-                    helper[j]=true;
-            }
+            if(notPrimes[i]==true)
+                continue;
+            count++;
+            for(int j=i*2; j<n; j+=i)
+                notPrimes[j]=true; //j=4->6->8->10->12
         }
-        return v;
+        return count;
     }
-    
 }
