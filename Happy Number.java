@@ -1,18 +1,23 @@
+Happy Number
+
 public class Solution {
     public boolean isHappy(int n) {
-        HashSet<Integer> hs = new HashSet<>();
-        int sum=n;
-        while(!hs.contains(sum)){
-            hs.add(sum);
-            
-            int x=sum, s=0;
-            while(x>0){
-                int y = x%10;
-                s += y*y;
-                x = x/10;
-            }
-            sum=s;
+        HashMap<Integer,Integer> map = new HashMap<>();
+        while(!map.containsKey(n)){
+            int tmp = getSquareSum(n);
+            map.put(n, tmp);
+            n=tmp;
         }
-        return sum == 1;
+        return n==1;
+    }
+    
+    private int getSquareSum(int n){
+        int sum=0;
+        while(n>0){
+            int tmp=n%10;
+            sum += tmp*tmp;
+            n/=10;
+        }
+        return sum;
     }
 }
