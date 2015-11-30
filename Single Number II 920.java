@@ -16,3 +16,21 @@ public class Solution {
         return result;
     }
 }
+---------------optimization : ------------
+public class Solution {
+    public int singleNumber(int[] nums) {
+        if(nums.length<3)
+            return 1;
+            
+        int val=0;
+        for(int i=0; i<32; i++){
+            int v=0;
+            for(int n=0; n<nums.length; n++){
+                v+=((nums[n]>>i)&1);
+                v%=3;
+            }
+            val|=(v<<i);
+        }
+        return val;
+    }
+}
