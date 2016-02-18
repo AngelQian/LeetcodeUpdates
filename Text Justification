@@ -1,0 +1,55 @@
+public class Solution {
+    public List<String> fullJustify(String[] words, int maxWidth) {
+        List<String> list = new ArrayList<>();
+        for(int i=0, j=0; j<words.length;){
+            j=i;
+            int base_len = 0;
+            while(j<words.length && (base_len+words[j].length()+(j-i)<=maxWidth)){
+                base_len+=words[j].length();
+                j++;
+            }
+            
+            if(j==i+1 || j==words.length)
+                leftDistributeLine(i, j, words, list, maxWidth);
+            else
+                evenDistributeLine(i, j, words, base_len, list, maxWidth);
+            
+            i = Math.max(i+1, j);    
+        }
+        return list;
+    }
+    
+    private void leftDistributeLine(int left, int right, String[] words, List<String> list, int maxWidth){
+        StringBuilder bd = new StringBuilder();
+        for(int i=left; i<right; i++){
+            bd.append(words[i]);
+            if(bd.length()<maxWidth)
+                bd.append(" ");
+        }
+        while(bd.length()<maxWidth)
+            bd.append(" ");
+        list.add(bd.toString());        
+    }
+    
+    private void evenDistributeLine(int left, int right, String[] words, int len, List<String> list, int maxWidth){
+        int intervals = right-left-1;
+        len += intervals;
+        int rest = maxWidth-len;
+        int even = rest/intervals;
+        int count = rest%intervals;
+        
+        StringBuilder bd = new StringBuilder();
+        for(int i=left; i<right; i++){
+            bd.append(words[i]);
+            if(i==right-1)
+                continue;
+            for(int e=0; e<even+1; e++)
+                bd.append(" ");
+            if(count>0){
+                bd.append(" ");
+                count--;
+            }
+        }
+        list.add(bd.toString());
+    }
+}
