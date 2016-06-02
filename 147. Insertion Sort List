@@ -1,0 +1,28 @@
+public ListNode insertionSortList(ListNode head) {
+            ListNode dummy = new ListNode(0), cur=head;
+
+            while(cur!=null){
+                ListNode save = cur.next;
+                cur.next = null;
+
+                if(dummy.next == null){
+                    dummy.next = cur;
+                }else{
+                    ListNode pre = dummy, insertBefore = dummy.next;
+                    while(insertBefore!=null){
+                        if(insertBefore.val>cur.val){
+                            pre.next = cur;
+                            cur.next = insertBefore;
+                            break;
+                        }
+                        pre = insertBefore;
+                        insertBefore = insertBefore.next;
+                    }
+
+                    if(insertBefore == null)
+                        pre.next = cur;
+                }
+                cur = save;
+            }
+            return dummy.next;
+        }
